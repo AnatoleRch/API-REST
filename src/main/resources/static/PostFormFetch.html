@@ -91,6 +91,28 @@
                 })
                 .catch(afficheMessage);
         }
+                // SUPPRIMER
+                function supprimer(url) {
+            // On fait un appel POST pour enregistrer une nouvelle catégorie
+            // à partir des données saisies dans le formulaire
+            fetch(url,
+                {
+                    method: 'delete',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+
+                    body: serializeFormToJSON(formulaire)
+                })
+                .then(response => {
+                    if (response.status == 409) {
+                            afficheMessage("On ne peut pas supprimer une categorie avec des produits");
+                    } else{
+                        chargeCategories();
+                    }
+                })
+                .catch(afficheMessage);
+        }
     </script>
 </head>
 
@@ -116,14 +138,12 @@
         <h2>Liste des catégories ({{_embedded.categories.length}} / {{page.totalElements}})</h2>
         <TABLE>
         {{! Un commentaire Mustache }}
-        <TR><TH>Code</TH><TH>Libelle</TH><TH>Description</TH></TR>
+        <TR><TH>Code</TH><TH>Libelle</TH><TH>Description</TH><TH>Action</TH></TR>
         {{! Pour chaque categorie dans le tableau 'categories' }}
         {{#_embedded.categories}}
         {{! Une ligne dans la table }}
-        <TR><TD>{{code}}</TD><TD>{{libelle}}</TD><TD>{{description}}</TD></TR>
+        <TR><TD>{{code}}</TD><TD>{{libelle}}</TD><TD>{{description}}</TD><TD><button type="boutonSupprimer" id="boutonSupprimer" onclick="supprimer('{{_links.self.href}}')">Supprimer</button></TD></TR>
         {{/_embedded.categories}}
         </TABLE>
     </script>
-</body>
-
 </html>
